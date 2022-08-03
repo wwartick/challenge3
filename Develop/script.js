@@ -6,14 +6,20 @@ const lowerArray =['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', '
 const upperArray = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 const numberArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
 const specialArray = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")"];
-const holder = new Array();
+var holder = new Array();
+var finalHolder = new Array();
+
+
 
 var lengthCheck = function(){
+  holder = [];
   var lengthPrompt = window.prompt('Select a password length between 8 and 128 characters');
     if (lengthPrompt >= 8 && lengthPrompt <= 128){
      passwordLength = lengthPrompt;
       console.log(passwordLength);
       lowercaseCheck();
+      return;
+
     } else {
       window.alert("The value must be between 8 and 128. Please try again.");
       return lengthCheck();
@@ -25,9 +31,12 @@ var lowercaseCheck = function(){
     if (lowerPrompt === "y" ||lowerPrompt === "yes" || lowerPrompt === "Y" ||lowerPrompt === "YES"){
         holder.push(lowerArray);
         uppercaseCheck();
-      /* array shit here*/
+        return;
+
     } if (lowerPrompt === "n" ||lowerPrompt === "no" || lowerPrompt === "N" ||lowerPrompt === "NO"){
       uppercaseCheck();
+      return;
+
     }else {
         window.alert("You need to provide a valid answer for lower case letters! Please try again");
         return lowercaseCheck();
@@ -39,9 +48,12 @@ var uppercaseCheck = function(){
     if (upperPrompt === "y" ||upperPrompt === "yes" || upperPrompt === "Y" ||upperPrompt === "YES"){
         holder.push(upperArray);
       numberCheck();
-      /* array shit here*/
+      return;
+      
     }if (upperPrompt === "n" ||upperPrompt === "no" || upperPrompt === "N" ||upperPrompt === "NO"){
       numberCheck();
+      return;
+
     }else {
         window.alert("You need to provide a valid answer for upper case letters! Please try again");
         return uppercaseCheck();
@@ -53,9 +65,12 @@ var numberCheck = function(){
     if (numberPrompt === "y" ||numberPrompt === "yes" || numberPrompt === "Y" ||numberPrompt === "YES"){
       holder.push(numberArray);
       specialCheck();
-      /* array shit here*/
+      return;
+
     }if (numberPrompt === "n" ||numberPrompt === "no" || numberPrompt === "N" ||numberPrompt === "NO"){
       specialCheck();
+      return;
+
     }else {
         window.alert("You need to provide a valid answer for numbers! Please try again");
         return numberCheck();
@@ -67,35 +82,42 @@ var specialCheck = function(){
     if (specialPrompt === "y" ||specialPrompt === "yes" || specialPrompt === "Y" ||specialPrompt === "YES"){
       holder.push(specialArray);
      randomizer();
-     writePassword()
-    }if (specialPrompt === "n" ||specialPrompt === "no" || specialPrompt === "N" ||specialPrompt === "NO"){
+     return;
+
+    }if ((specialPrompt === "n" ||specialPrompt === "no" || specialPrompt === "N" ||specialPrompt === "NO") && holder.length == 0 ){
+      window.alert("You must select at least on option! Please try again");
+      lowercaseCheck();
+    }else if (specialPrompt === "n" ||specialPrompt === "no" || specialPrompt === "N" ||specialPrompt === "NO"){
       randomizer();
-      writePassword();
+      return;
+
     }else {
         window.alert("You need to provide a valid answer for special characters! Please try again");
         return; 
   }
 }
 
+
 var randomizer = function(){
+  finalHolder = []
   for(let i = 0; i < passwordLength; i++){
   const newHolder = holder[Math.floor(Math.random() * (holder.length))];
-  console.log(newHolder[Math.floor(Math.random() * (newHolder.length))]);
+  finalHolder.push(newHolder[Math.floor(Math.random() * (newHolder.length))]);
   }
 }
- /*for(let i = 0; i < holder.length; i++){
-  const newHolder = holder[i];
-for(let i = 0; i < newHolder.length; i++){
-  console.log(newHolder[i]);
+
+var generatePassword = function() {
+  var finalPassword = finalHolder.join("");
+  return finalPassword;
 }
-}
- */
+
 
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
 
 // Write password to the #password input
 function writePassword() {
+  lengthCheck();
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
   passwordText.value = password;
